@@ -60,3 +60,35 @@ export const resetPasswordEmailTemplate = (
 </html>`;
 };
 
+export const verifyEmailTemplate = (
+  path: string
+): string => {
+  const baseUrl = process.env.FE_BASE_URL;
+  const verifyLink = `${baseUrl}/${path}`;
+
+  return `
+  <html>
+    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+      <div style="max-width: 600px; margin: 0 auto; padding: 24px; background-color: #f9f9f9; border-radius: 8px;">
+        <h2 style="color: #6B46C1;">Welcome to Spotlight!</h2>
+
+        <p>Hi there,</p>
+        <p>Thank you for signing up. Please verify your email address to activate your account and start using Spotlight.</p>
+
+        <div style="margin: 24px 0; text-align: center;">
+          <a href="${verifyLink}" style="background-color: #6B46C1; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+            Verify My Email
+          </a>
+        </div>
+
+        <p>If you did not sign up for a Spotlight account, please ignore this email.</p>
+
+        <p>Need help? Feel free to contact our support team anytime.</p>
+
+        <p>Cheers,<br>The Spotlight Team</p>
+      </div>
+    </body>
+  </html>
+  `;
+};
+

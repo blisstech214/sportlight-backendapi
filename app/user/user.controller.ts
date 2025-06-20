@@ -8,6 +8,7 @@ import { createUserTokens } from "../common/services/passport-jwt.service";
 import {
   resetPasswordEmailTemplate,
   sendEmail,
+  verifyEmailTemplate,
 } from "../common/services/email.service";
 import createHttpError from "http-errors";
 import userSchema from "./user.schema";
@@ -133,7 +134,19 @@ export const signupUser = asyncHandler(async (req: Request, res: Response) => {
     const newToken = company && createUserTokens(company);
     token = newToken?.accessToken || "";
 
-    res.send({
+    //Vefiry Email Send Code Here 
+
+    const mailOptions = {
+      from: process.env.MAIL_USER,
+      to: email,
+      subject: "Welcome to AI-Interview Platform",
+      html: verifyEmailTemplate("verify-email"),
+    };
+
+    let emailRes = await sendEmail(mailOptions);
+
+    if (emailRes.accepted && emailRes.accepted.length > 0 && emailRes.response.startsWith("250")) {
+      res.send({
       success: true,
       message: "User Created Successfully!",
       token,
@@ -144,6 +157,13 @@ export const signupUser = asyncHandler(async (req: Request, res: Response) => {
         userID: company?._id,
       },
     });
+    }
+    else {
+      res.status(400).send({
+      success: false,
+      message: "Please verify your email to complete the signup process. If you didn't receive the email, please try again.",
+    });
+    }    
 
   }
   else {
